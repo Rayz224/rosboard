@@ -20,7 +20,7 @@ class GenericViewer extends Viewer {
     this.dataTable = $('<table></table>')
           .addClass('mdl-data-table')
           .addClass('mdl-js-data-table')
-          .css({'width': '100%', 'min-height': '30pt', 'table-layout': 'fixed' })
+          .css({'width': '100%', 'min-height': '30pt' })
           .appendTo(this.viewerNode);
 
     super.onCreate();
@@ -45,18 +45,24 @@ class GenericViewer extends Viewer {
               this.fieldNodes[field] = $('<td></td>')
                 .addClass('mdl-data-table__cell--non-numeric')
                 .addClass('monospace')
-                .css({'overflow': 'hidden', 'text-overflow': 'ellipsis'})
+                .css({'overflow': 'auto'})
                 .appendTo(tr);
               let that = this;
               this.fieldNodes[field].click(() => {that.expandFields[field] = !that.expandFields[field]; });
           }
+
+        try {
+            data[field] = JSON.parse(data[field]);
+        } catch(e) {
+            // do nothing
+        }
 
         if(data[field].uuid) {
             this.fieldNodes[field].text(data[field].uuid.map((byte) => ((byte<16) ? "0": "") + (byte & 0xFF).toString(16)).join(''));
             this.fieldNodes[field].css({"color": "#808080"});
             continue;
         }
-        
+
         if(typeof(data[field])==="boolean") {
           if(data[field] === true) {
               this.fieldNodes[field].text("true");
@@ -73,7 +79,7 @@ class GenericViewer extends Viewer {
           continue;
         }
 
-        if(this.expandFields[field]) {
+        if(!this.expandFields[field]) {
           this.fieldNodes[field][0].innerHTML = (
             JSON.stringify(data[field], null, '  ')
               .replace(/\n/g, "<br>")

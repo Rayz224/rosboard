@@ -1,0 +1,9 @@
+services:
+  rosboard:
+    container_name: rosboard
+    image: rayz224/rosboard
+    command: ros2 run rosboard rosboard_node
+    ports:
+      - "8888:8888"
+    environment:
+      - ROS_DOMAIN_ID=0
