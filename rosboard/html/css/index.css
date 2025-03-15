@@ -111,7 +111,13 @@ input, textarea, *[contenteditable=true] {
   background:#202020;
 }
 
+.grid {
+  position: relative;
+}
+
 .card {
+  position: absolute;
+  z-index: 1;
   border-radius:5pt;
   overflow:auto;
   margin-left:20pt;
@@ -135,6 +141,13 @@ input, textarea, *[contenteditable=true] {
   overflow:hidden;
   text-overflow:ellipsis;
   width:calc( 100% - 45pt );
+  cursor: move; /* Show move cursor on title */
+}
+
+.card.is-dragging {
+  z-index: 2;
+  cursor: move;
+  opacity: 0.8;
 }
 
 .card-title-tag {

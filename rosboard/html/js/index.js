@@ -41,13 +41,65 @@ if(window.localStorage && window.localStorage.subscriptions) {
 
 let $grid = null;
 $(() => {
-  $grid = $('.grid').masonry({
-    itemSelector: '.card',
-    gutter: 10,
-    percentPosition: true,
-  });
-  $grid.masonry("layout");
+    $grid = $(".grid").masonry({
+        itemSelector: ".card",
+        gutter: 10,
+        percentPosition: true,
+    });
+
+    makeCardsDraggable();
+    $grid.masonry("layout");
 });
+
+function makeCardsDraggable() {
+    let draggableElems = document.querySelectorAll(".card");
+    draggableElems.forEach((elem) => {
+        let draggie = new Draggabilly(elem, {
+            handle: ".card-title",
+        });
+
+        // Track dragging state
+        draggie.on("dragStart", function (event, pointer) {
+            elem.classList.add("is-dragging");
+        });
+
+        draggie.on("dragEnd", function (event, pointer) {
+            elem.classList.remove("is-dragging");
+
+            // Get all cards
+            let cards = Array.from(document.querySelectorAll(".card"));
+
+            // Get their current positions
+            let positions = cards.map((card) => ({
+                card: card,
+                rect: card.getBoundingClientRect(),
+            }));
+
+            // Sort by vertical position first, then horizontal
+            positions.sort((a, b) => {
+                const rowHeight = 50; // approximate row height threshold
+                if (Math.abs(a.rect.top - b.rect.top) < rowHeight) {
+                    return a.rect.left - b.rect.left;
+                }
+                return a.rect.top - b.rect.top;
+            });
+
+            // Reorder DOM elements
+            const grid = document.querySelector(".grid");
+            positions.forEach((pos) => {
+                grid.appendChild(pos.card);
+            });
+
+            // Force layout update
+            $grid.masonry("destroy");
+            $grid = $(".grid").masonry({
+                itemSelector: ".card",
+                gutter: 10,
+                percentPosition: true,
+            });
+        });
+    });
+}
 
 setInterval(() => {
   if(currentTransport && !currentTransport.isConnected()) {
@@ -69,10 +121,18 @@ function updateStoredSubscriptions() {
 }
 
 function newCard() {
-  // creates a new card, adds it to the grid, and returns it.
-  let card = $("<div></div>").addClass('card')
-    .appendTo($('.grid'));
-  return card;
+    let card = $("<div></div>").addClass("card").appendTo($(".grid"));
+
+    $grid.masonry("destroy");
+    $grid = $(".grid").masonry({
+        itemSelector: ".card",
+        gutter: 10,
+        percentPosition: true,
+    });
+
+    setTimeout(() => makeCardsDraggable(), 100);
+
+    return card;
 }
 
 let onOpen = function() {
@@ -108,7 +168,7 @@ let currentTopics = {};
 let currentTopicsStr = "";
 
 let onTopics = function(topics) {
-  
+
   // check if topics has actually changed, if not, don't do anything
   // lazy shortcut to deep compares, might possibly even be faster than
   // implementing a deep compare due to
@@ -117,12 +177,12 @@ let onTopics = function(topics) {
   if(newTopicsStr === currentTopicsStr) return;
   currentTopics = topics;
   currentTopicsStr = newTopicsStr;
-  
+
   let topicTree = treeifyPaths(Object.keys(topics));
-  
+
   $("#topics-nav-ros").empty();
   $("#topics-nav-system").empty();
-  
+
   addTopicTreeToNav(topicTree[0], $('#topics-nav-ros'));
 
   $('<a></a>')
@@ -195,7 +255,7 @@ function initSubscribe({topicName, topicType}) {
     subscriptions[topicName] = {
       topicType: topicType,
     }
-  }  
+  }
   currentTransport.subscribe({topicName: topicName});
   if(!subscriptions[topicName].viewer) {
     let card = newCard();
@@ -236,7 +296,7 @@ function treeifyPaths(paths) {
         r[name] = {result: []};
         r.result.push({name, children: r[name].result})
       }
-      
+
       return r[name];
     }, level)
   });
