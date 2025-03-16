@@ -1,12 +1,12 @@
 # ROSboard (rayz224's fork)
 
-## My changes
+## New features
 
-- Dockerized the project
-- Added support for changing the layout (moving panels)
-  - Added support for saving and loading custom layouts
-- Added support for resizing panels
-- Added support for visualizing long string messages
+- [x] Dockerized the project
+- [x] Basic support for changing the layout (moving panels)
+- [x] Support for visualizing long string messages
+- [ ] Support for saving and loading custom layouts
+- [ ] Support for resizing panels
 
 ## Usage as a docker image
 
