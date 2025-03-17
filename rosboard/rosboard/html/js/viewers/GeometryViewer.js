@@ -83,7 +83,7 @@ class GeometryViewer extends Space2DViewer {
     let angles = this._quatToEuler(msg.pose.pose.orientation);
     this.renderTrackedPoseView({x: x, y: y, yaw: angles.yaw});
   }
-  
+
   renderTrackedPoseView({x, y, yaw}) {
 
     if(!this.points) this.points = new Array(100).fill(NaN);
@@ -111,24 +111,29 @@ class GeometryViewer extends Space2DViewer {
       drawObjects = drawObjects.concat([
         // arrow stem
         {type: "path", data: [
-          x, 
-          y, 
-          x + 2*Math.cos(yaw), 
+          x,
+          y,
+          x + 2*Math.cos(yaw),
           y + 2*Math.sin(yaw),
         ], color: "#ff5000", lineWidth: 1},
         // arrow head
         {type: "path", data: [
           x + 2*Math.cos(yaw) + 0.5*Math.cos(13*Math.PI/12+yaw),
-          y + 2*Math.sin(yaw) + 0.5*Math.sin(13*Math.PI/12+yaw), 
-          x + 2*Math.cos(yaw), 
+          y + 2*Math.sin(yaw) + 0.5*Math.sin(13*Math.PI/12+yaw),
+          x + 2*Math.cos(yaw),
           y + 2*Math.sin(yaw),
           x + 2*Math.cos(yaw) + 0.5*Math.cos(-13*Math.PI/12+yaw),
-          y + 2*Math.sin(yaw) + 0.5*Math.sin(-13*Math.PI/12+yaw), 
+          y + 2*Math.sin(yaw) + 0.5*Math.sin(-13*Math.PI/12+yaw),
         ], color: "#ff5000", lineWidth: 1}
       ]);
     }
     this.setDefaultView({xcenter: x, ycenter: y, scale: 40.0});
     this.draw(drawObjects);
+  }
+
+  resetHistory() {
+    this.points = new Array(100).fill(NaN);
+    this.ptr = 0;
   }
 }
 

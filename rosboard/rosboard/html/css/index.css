@@ -218,6 +218,20 @@ input, textarea, *[contenteditable=true] {
   }
 }
 
+.meaning-button {
+  margin-left: 10pt;
+  margin-bottom: 10pt;
+}
+
+.meaning-button.selected {
+  background:rgb(38, 131, 74);
+}
+
+.mdl-button.meaning-button {
+  font-size: 11pt;
+  text-transform: none;
+}
+
 .packery-drop-placeholder {
   outline: 3px dashed #444;
   outline-offset: -6px;

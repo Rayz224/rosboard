@@ -27,7 +27,6 @@ class GenericViewer extends Viewer {
   }
 
   onData(data) {
-      console.log(data);
       this.card.title.text(data._topic_name);
 
       for(let field in data) {
