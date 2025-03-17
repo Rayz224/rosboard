@@ -5,6 +5,7 @@
 - [x] Dockerized the project
 - [x] Basic support for changing the layout (moving panels)
 - [x] Support for visualizing long string messages
+- [x] Support for ArucoMarkers messages (pose and meaning)
 - [ ] Support for saving and loading custom layouts
 - [ ] Support for resizing panels
 
