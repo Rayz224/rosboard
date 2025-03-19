@@ -28,7 +28,7 @@ docker build -t rayz224/rosboard .
 For multi-platform builds, use:
 
 ```bash
-docker build -t rayz224/rosboard --platform linux/amd64,linux/arm64 .
+docker build -t rayz224/rosboard --platform linux/amd64,linux/arm64/v8 .
 ```
 
 # Original README
